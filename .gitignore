@@ -1,0 +1,11 @@
+# distribution
+**/dist/
+
+# secrets
+**/.env
+
+# IDE related
+**/.idea/
+
+# packages
+**/node_modules/
