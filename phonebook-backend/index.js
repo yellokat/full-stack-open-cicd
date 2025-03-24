@@ -123,6 +123,15 @@ app.put('/api/persons/:id', (request, response, next) => {
   }).catch(error => next(error))
 })
 
+app.get('/health', (req, res) => {
+  res.send('ok')
+})
+
+app.get('/version', (req, res) => {
+  res.send('1')
+})
+
+
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
