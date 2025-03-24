@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from "prop-types";
 
 const PersonForm = ({ handleNameFormChange, handleNumberFormChange, handleSubmit }) => {
     return (
@@ -14,6 +14,12 @@ const PersonForm = ({ handleNameFormChange, handleNumberFormChange, handleSubmit
             </div>
         </form>
     )
+}
+
+PersonForm.propTypes = {
+  handleNameFormChange: PropTypes.func.isRequired,
+  handleNumberFormChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 }
 
 export default PersonForm

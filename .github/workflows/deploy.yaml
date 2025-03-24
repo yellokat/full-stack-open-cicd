@@ -1,0 +1,61 @@
+name: Deployment pipeline
+
+# ============================================================================
+# triggers on:
+#     push on main branch
+#     pull request to main branch opened on any branch
+#     pull request to main branch modified
+#     pull request to main branch closed
+# ============================================================================
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  # ============================================================================
+  # lint & deploy
+  # unless commit message contains "#skip"
+  # ============================================================================
+  deploy:
+    if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message), '#skip')}}
+    name: Lint and deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: cd phonebook-frontend && npm install && npm audit fix --force
+      - run: cd phonebook-frontend && npm run lint
+      - run: cd phonebook-backend && npm install && npm audit fix --force
+      - run: cd phonebook-backend && npm run lint
+      - name: Trigger deployment
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+  # ============================================================================
+  # bump version tag
+  # runs after workflow "deploy"
+  # ============================================================================
+  tag_release:
+    name: Tag for release
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-20.04
+    needs: deploy
+    permissions:
+      contents: write
+    steps:
+      - name: checkout branch
+        id: step1
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        id: step2
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch

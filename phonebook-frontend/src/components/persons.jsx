@@ -1,5 +1,5 @@
-import React from 'react'
 import DeleteButton from './deleteButton'
+import PropTypes from "prop-types";
 
 const Persons = ({ persons, searchKey, handleDelete }) => {
     return (
@@ -15,6 +15,12 @@ const Persons = ({ persons, searchKey, handleDelete }) => {
             }
         </>
     )
+}
+
+Persons.propTypes = {
+    persons: PropTypes.array.isRequired,
+    searchKey: PropTypes.string.isRequired,
+    handleDelete: PropTypes.func.isRequired,
 }
 
 export default Persons

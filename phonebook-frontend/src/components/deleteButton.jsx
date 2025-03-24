@@ -1,4 +1,4 @@
-import React from 'react'
+import PropTypes from "prop-types";
 
 const DeleteButton = ({onClick}) => {
     return (
@@ -6,6 +6,10 @@ const DeleteButton = ({onClick}) => {
             <button type="button" onClick={onClick}>delete</button>
         </>
     )
+}
+
+DeleteButton.propTypes = {
+  onClick: PropTypes.func.isRequired
 }
 
 export default DeleteButton
